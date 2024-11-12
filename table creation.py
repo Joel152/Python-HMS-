@@ -1,0 +1,15 @@
+import mysql.connector as sql
+conn=sql.connect(host='localhost',user='root',passwd='manager',database='marketing_system_and_sales_system')
+if conn.is_connected():
+      print('succesfully conected')
+c1=conn.cursor()
+c1.execute('create table customer_details(customer_name varchar(50) primary key,product_name varchar(60))')
+print('table created')
+c1.execute('create table products_brand(customer_name varchar(50),product_type varchar(40),product_brand varchar(50),produccts_available int(9))')
+print('table created')
+c1.execute('create table order_placement(customr_name varchar(50),product_name varchar(50),demanding_quantity int(9))')
+print('table created')
+c1.execute('create table order_details(customer_name varchar(50),mobile_number int(10),adress varchar(999),date_to_deliver int(3))')
+print('table created')
+c1.execute('create table cancelation_of_order(customer_name varchar(50),order_number int(15),products_contained varchar(90),reason_for_cancelling varachar(999),confirm_cancelation varchar(20))')
+print('table created')
