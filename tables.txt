@@ -1,0 +1,91 @@
+cursor.execute('''
+CREATE TABLE IF NOT EXISTS Staff (
+    staff_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255),
+    login_name VARCHAR(255),
+    login_password VARCHAR(255),
+    department VARCHAR(255),
+    primary_role VARCHAR(255),
+    additional_roles VARCHAR(255)
+)
+''')
+
+cursor.execute('''
+CREATE TABLE IF NOT EXISTS Patients (
+    patient_id INT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    age INT NOT NULL,
+    contact_info VARCHAR(255) NOT NULL,
+    medical_history TEXT
+);
+''')
+
+cursor.execute('''
+CREATE TABLE IF NOT EXISTS InPatientWard (
+    patient_number INT AUTO_INCREMENT PRIMARY KEY,
+    patient_id INT,
+    adm_reason VARCHAR(255),
+    block ENUM('Block-A', 'Block-B', 'Block-C', 'Block-D') NOT NULL,
+    room_bed VARCHAR(255),
+    status ENUM('ADMITTED', 'Billed') DEFAULT 'ADMITTED',
+    admitted_on DATE NOT NULL,
+    FOREIGN KEY (patient_id) REFERENCES Patients(patient_id)
+)
+''')
+
+create_table_query = """
+CREATE TABLE IF NOT EXISTS treatments (
+    treatment_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    patient_id INT NOT NULL,
+    doctor_id INT NOT NULL,
+    diagnosis TEXT CHARACTER SET utf8mb4,
+    medications TEXT CHARACTER SET utf8mb4,
+    treatment_date DATE,
+    FOREIGN KEY (patient_id) REFERENCES patients(patient_id),
+    FOREIGN KEY (doctor_id) REFERENCES doctors(doctor_id)
+);
+"""
+
+create_table_query = """
+CREATE TABLE IF NOT EXISTS billing (
+    bill_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    patient_id INT NOT NULL,
+    treatment_id INT NOT NULL,
+    amount DECIMAL(12, 2),
+    payment_status TEXT CHARACTER SET utf8mb4,
+    FOREIGN KEY (patient_id) REFERENCES patients(patient_id),
+    FOREIGN KEY (treatment_id) REFERENCES treatments(treatment_id)
+);
+"""
+
+create_table_query = """
+CREATE TABLE IF NOT EXISTS doctors (
+    doctor_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name TEXT CHARACTER SET utf8mb4,
+    specialization TEXT CHARACTER SET utf8mb4,
+    contact_info TEXT CHARACTER SET utf8mb4
+);
+"""
+
+
+import mysql.connector
+
+# Establish the MySQL connection
+conn = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="1234",
+    database="hms"
+)
+cursor = conn.cursor()
+
+# SQL query to create the doctors table
+
+
+# Execute the query to create the table
+cursor.execute(create_table_query)
+print("Table 'doctors' created successfully.")
+
+# Close the cursor and connection
+cursor.close()
+conn.close()
